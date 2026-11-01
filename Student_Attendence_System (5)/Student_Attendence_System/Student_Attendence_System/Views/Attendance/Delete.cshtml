@@ -1,0 +1,114 @@
+﻿@model Student_Attendence_System.Models.Attendance
+
+@{
+    ViewData["Title"] = "Delete Attendance";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Delete Attendance
+        </h1>
+
+        <p>
+            Remove this attendance record.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="card">
+
+            <div class="card-body text-center">
+
+                <div class="empty-state-icon"
+                     style="background:#fef2f2;color:#dc2626">
+
+                    !
+
+                </div>
+
+                <h3>
+                    Delete this record?
+                </h3>
+
+                <p class="text-muted">
+                    This action cannot be undone.
+                </p>
+
+
+                <div class="alert alert-warning text-start">
+
+                    <strong>
+                        Student:
+                    </strong>
+
+                    @Model.Student?.Name
+
+                    <br />
+
+                    <strong>
+                        Date:
+                    </strong>
+
+                    @Model.AttendanceDate.ToString(
+                        "dd MMM yyyy")
+
+                    <br />
+
+                    <strong>
+                        Time:
+                    </strong>
+
+                    @Model.AttendanceTime.ToString(
+                        "hh:mm tt")
+
+                </div>
+
+
+                <form asp-action="Delete"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.Id" />
+
+                    <div class="d-flex
+                                justify-content-center
+                                gap-2">
+
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary">
+
+                            Cancel
+
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-danger">
+
+                            Delete Record
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

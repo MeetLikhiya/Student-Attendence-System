@@ -1,0 +1,197 @@
+﻿@model IEnumerable<Student_Attendence_System.Models.Attendance>
+
+@{
+    ViewData["Title"] = "My Dashboard";
+
+    var student = ViewBag.Student as Student_Attendence_System.Models.Student;
+
+    int totalDays = ViewBag.TotalDays ?? 0;
+    int presentDays = ViewBag.PresentDays ?? 0;
+
+    double percentage = 0;
+
+    if (totalDays > 0)
+    {
+        percentage = Math.Round(
+            (double)presentDays / totalDays * 100,
+            1
+        );
+    }
+}
+
+<div class="page-header">
+
+    <div>
+        <h1>My Dashboard</h1>
+
+        <p>
+            Welcome back, @student?.Name
+        </p>
+    </div>
+
+</div>
+
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="dashboard-card">
+
+            <span>Attendance Days</span>
+
+            <strong>
+                @totalDays
+            </strong>
+
+            <small class="text-muted">
+                Recorded attendance
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="dashboard-card">
+
+            <span>Present</span>
+
+            <strong>
+                @presentDays
+            </strong>
+
+            <small class="text-muted">
+                Days present
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="dashboard-card">
+
+            <span>Attendance Rate</span>
+
+            <strong>
+                @percentage%
+            </strong>
+
+            <small class="text-muted">
+                Current attendance rate
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-header">
+
+        <strong>
+            My Attendance
+        </strong>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Date</th>
+
+                            <th>Time</th>
+
+                            <th>Status</th>
+
+                            <th>Method</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var attendance in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @attendance.AttendanceDate.ToString("dd MMM yyyy")
+                                </td>
+
+                                <td>
+                                    @attendance.AttendanceTime.ToString("hh:mm tt")
+                                </td>
+
+                                <td>
+
+                                    @if (attendance.Status == "Present")
+                                    {
+                                        <span class="badge bg-success">
+                                            Present
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @attendance.Status
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+                                    @attendance.Method
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    No attendance records
+                </h3>
+
+                <p>
+                    Your attendance records will appear here.
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+</div>

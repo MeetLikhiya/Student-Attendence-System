@@ -1,0 +1,293 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Student_Attendence_System.Models
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    var controller =
+        ViewContext.RouteData.Values["controller"]?.ToString();
+
+    var action =
+        ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - AttendAI
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ◉
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    AttendAI
+                </div>
+
+                <div class="brand-subtitle">
+                    Student Attendance
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @if (User.IsInRole("Faculty"))
+        {
+            <div class="sidebar-section">
+                MAIN
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="sidebar-link @(controller == "Home" && action == "Index" ? "active" : "")">
+
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+
+            </a>
+
+            <a asp-controller="Student"
+               asp-action="Index"
+               class="sidebar-link @(controller == "Student" ? "active" : "")">
+
+                <span class="sidebar-icon">♙</span>
+                <span>Students</span>
+
+            </a>
+
+            <a asp-controller="Attendance"
+               asp-action="Index"
+               class="sidebar-link @(controller == "Attendance" && action != "Mark" ? "active" : "")">
+
+                <span class="sidebar-icon">✓</span>
+                <span>Attendance</span>
+
+            </a>
+
+            <a asp-controller="Attendance"
+               asp-action="Mark"
+               class="sidebar-link @(controller == "Attendance" && action == "Mark" ? "active" : "")">
+
+                <span class="sidebar-icon">◉</span>
+                <span>Mark Attendance</span>
+
+            </a>
+        }
+
+
+        @if (User.IsInRole("Student"))
+        {
+            <div class="sidebar-section">
+                STUDENT
+            </div>
+
+            <a asp-controller="StudentPortal"
+               asp-action="Index"
+               class="sidebar-link @(controller == "StudentPortal" ? "active" : "")">
+
+                <span class="sidebar-icon">⌂</span>
+                <span>My Dashboard</span>
+
+            </a>
+        }
+
+
+        <div class="sidebar-bottom">
+
+            <div class="privacy-box">
+
+                <div class="privacy-icon">
+                    🔒
+                </div>
+
+                <div>
+
+                    <strong>
+                        Local Recognition
+                    </strong>
+
+                    <small>
+                        Face processing stays local.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+}
+
+
+<main class="main-content">
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <header class="topbar">
+
+        <button id="sidebarToggle"
+                class="mobile-menu">
+            ☰
+        </button>
+
+        <div></div>
+
+        <div class="topbar-right">
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                System Online
+
+            </div>
+
+
+            <div class="profile">
+
+                <div class="profile-avatar">
+
+                    @(
+                        User.Identity?.Name?
+                            .Substring(0, 1)
+                            .ToUpper()
+                        ?? "U"
+                    )
+
+                </div>
+
+                <div class="profile-info">
+
+                    <strong>
+                        @(User.Identity?.Name ?? "User")
+                    </strong>
+
+                    <small>
+
+                        @if (User.IsInRole("Faculty"))
+                        {
+                            @:Faculty
+                        }
+                        else if (User.IsInRole("Student"))
+                        {
+                            @:Student
+                        }
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <form asp-controller="Account"
+                  asp-action="Logout"
+                  method="post"
+                  class="logout-form">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-sm btn-outline-secondary">
+
+                    Logout
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </header>
+}
+
+    <div class="page-container">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success mb-4">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger mb-4">
+                @TempData["Error"]
+            </div>
+        }
+
+        @RenderBody()
+
+    </div>
+
+</main>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="~/js/site.js"
+        asp-append-version="true">
+</script>
+
+<script>
+
+    const toggle =
+        document.getElementById("sidebarToggle");
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+    if (toggle && sidebar) {
+
+        toggle.addEventListener("click", function () {
+
+            sidebar.classList.toggle(
+                "sidebar-open"
+            );
+
+        });
+
+    }
+
+</script>
+
+@await RenderSectionAsync(
+    "Scripts",
+    required: false
+)
+
+</body>
+</html>

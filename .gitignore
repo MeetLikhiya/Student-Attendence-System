@@ -1,0 +1,30 @@
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+**/TestResults/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/.venv/
+**/.venv312/
+**/venv/
+**/env/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+secrets.json
+appsettings.Development.json
+
+# Face data and uploaded images
+**/faces/
+**/uploads/
+
+# Logs
+*.log
+
+# IDE
+.idea/

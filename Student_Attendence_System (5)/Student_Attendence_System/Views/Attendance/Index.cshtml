@@ -1,0 +1,254 @@
+﻿@model IEnumerable<Student_Attendence_System.Models.Attendance>
+
+@{
+    ViewData["Title"] = "Attendance";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Attendance
+        </h1>
+
+        <p>
+            View and manage attendance records.
+        </p>
+
+    </div>
+
+    <a asp-action="Mark"
+       class="btn btn-primary">
+
+        ◉ Mark Attendance
+
+    </a>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-header">
+
+        <div class="d-flex
+                    justify-content-between
+                    align-items-center
+                    gap-3
+                    flex-wrap">
+
+            <div>
+
+                <strong>
+                    Attendance Records
+                </strong>
+
+                <div class="text-muted"
+                     style="font-size:12px">
+
+                    @Model.Count() record(s)
+
+                </div>
+
+            </div>
+
+            <input id="attendanceSearch"
+                   type="search"
+                   class="form-control"
+                   style="max-width:280px"
+                   placeholder="Search attendance..." />
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table"
+                       id="attendanceTable">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Enrollment
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Time
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Method
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td class="fw-semibold">
+                                @item.Student?.Name
+                            </td>
+
+                            <td>
+                                @item.Student?.EnrollmentNo
+                            </td>
+
+                            <td>
+                                @item.AttendanceDate.ToString(
+                                    "dd MMM yyyy")
+                            </td>
+
+                            <td>
+                                @item.AttendanceTime.ToString(
+                                    "hh:mm tt")
+                            </td>
+
+                            <td>
+
+                                @if (item.Status == "Present")
+                                {
+                                    <span class="badge bg-success">
+                                        Present
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @item.Status
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+                                @item.Method
+                            </td>
+
+                            <td class="text-end">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+
+                                    View
+
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-outline-danger">
+
+                                    Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    No attendance records
+                </h3>
+
+                <p>
+                    Start face attendance to create
+                    your first attendance record.
+                </p>
+
+                <a asp-action="Mark"
+                   class="btn btn-primary">
+
+                    Mark Attendance
+
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+<script>
+
+    const search =
+        document.getElementById("attendanceSearch");
+
+    const table =
+        document.getElementById("attendanceTable");
+
+    if (search && table) {
+
+        search.addEventListener("input", function () {
+
+            const value =
+                this.value.toLowerCase();
+
+            table
+                .querySelectorAll("tbody tr")
+                .forEach(row => {
+
+                    row.style.display =
+                        row.innerText
+                            .toLowerCase()
+                            .includes(value)
+                            ? ""
+                            : "none";
+
+                });
+
+        });
+
+    }
+
+</script>
+
+}

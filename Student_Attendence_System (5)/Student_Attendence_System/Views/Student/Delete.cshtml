@@ -1,0 +1,97 @@
+﻿@model Student_Attendence_System.Models.Student
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Delete Student
+        </h1>
+
+        <p>
+            This action cannot be undone.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="card">
+
+            <div class="card-body text-center">
+
+                <div class="empty-state-icon"
+                     style="background:#fef2f2;color:#dc2626">
+
+                    !
+
+                </div>
+
+                <h3>
+                    Delete @Model.Name?
+                </h3>
+
+                <p class="text-muted">
+                    This will remove the student and
+                    associated attendance records.
+                </p>
+
+
+                <div class="alert alert-warning text-start">
+
+                    <strong>
+                        Enrollment:
+                    </strong>
+
+                    @Model.EnrollmentNo
+
+                </div>
+
+
+                <form asp-action="Delete"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.Id" />
+
+                    <div class="d-flex
+                                justify-content-center
+                                gap-2">
+
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary">
+
+                            Cancel
+
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-danger">
+
+                            Delete Student
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

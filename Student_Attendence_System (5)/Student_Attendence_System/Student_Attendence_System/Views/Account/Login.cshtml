@@ -1,0 +1,206 @@
+﻿@model Student_Attendence_System.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Login - AttendAI
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+</head>
+
+<body class="login-page">
+
+<div class="login-wrapper">
+
+    <div class="login-card">
+
+        <div class="login-brand">
+
+            <div class="login-logo">
+                ◉
+            </div>
+
+            <h1>
+                AttendAI
+            </h1>
+
+            <p>
+                Student Attendance System
+            </p>
+
+        </div>
+
+
+        <div class="login-title">
+
+            <h2>
+                Welcome back
+            </h2>
+
+            <p>
+                Sign in to continue
+            </p>
+
+        </div>
+
+
+        <div asp-validation-summary="All"
+             class="alert alert-danger">
+        </div>
+
+
+        <form asp-controller="Account"
+      asp-action="Login"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden"
+           name="returnUrl"
+           value="@ViewBag.ReturnUrl" />
+
+
+    <!-- ROLE -->
+
+    <div class="mb-3">
+
+        <label asp-for="Role"
+               class="form-label">
+            Login As
+        </label>
+
+        <select asp-for="Role"
+                class="form-select"
+                required>
+
+            <option value="">
+                Select Role
+            </option>
+
+            <option value="Student">
+                Student
+            </option>
+
+            <option value="Faculty">
+                Faculty
+            </option>
+
+        </select>
+
+        <span asp-validation-for="Role"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <div class="mb-3">
+
+        <label class="form-label">
+            Email
+        </label>
+
+        <input name="email"
+               type="email"
+               class="form-control"
+               placeholder="Enter your email"
+               autocomplete="username"
+               required />
+
+    </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Password
+                </label>
+
+                <input name="password"
+                       type="password"
+                       class="form-control"
+                       placeholder="Enter your password"
+                       autocomplete="current-password"
+                       required />
+
+            </div>
+
+
+            <div class="form-check mb-4">
+
+                <input name="rememberMe"
+                       value="true"
+                       type="checkbox"
+                       class="form-check-input"
+                       id="rememberMe" />
+
+                <label class="form-check-label"
+                       for="rememberMe">
+
+                    Remember me
+
+                </label>
+
+            </div>
+
+
+            <button type="submit"
+                    class="btn btn-primary w-100 login-button">
+
+                Sign In
+
+            </button>
+
+        </form>
+
+
+        <div class="text-center mt-4">
+
+            <span class="text-muted">
+                New student?
+            </span>
+
+            <a asp-controller="Account"
+               asp-action="Register"
+               class="fw-semibold">
+
+                Create account
+
+            </a>
+
+        </div>
+
+
+        <div class="login-security">
+
+            🔒 Secure role-based authentication
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

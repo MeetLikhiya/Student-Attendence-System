@@ -1,0 +1,181 @@
+﻿@model Student_Attendence_System.Models.Student
+
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Student Details
+        </h1>
+
+        <p>
+            Student profile and recognition status.
+        </p>
+
+    </div>
+
+    <div class="page-actions">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-outline-primary">
+
+            Edit
+
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            ← Back
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+    <div class="col-lg-7">
+
+        <div class="card">
+
+            <div class="card-header">
+                Student Information
+            </div>
+
+            <div class="card-body">
+
+                <div class="detail-row">
+
+                    <span class="detail-label">
+                        Name
+                    </span>
+
+                    <span class="detail-value">
+                        @Model.Name
+                    </span>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span class="detail-label">
+                        Enrollment No
+                    </span>
+
+                    <span class="detail-value">
+                        @Model.EnrollmentNo
+                    </span>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span class="detail-label">
+                        Email
+                    </span>
+
+                    <span class="detail-value">
+                        @(Model.Email ?? "—")
+                    </span>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span class="detail-label">
+                        Class
+                    </span>
+
+                    <span class="detail-value">
+                        @(Model.ClassName ?? "—")
+                    </span>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span class="detail-label">
+                        Created
+                    </span>
+
+                    <span class="detail-value">
+                        @Model.CreatedAt.ToString("dd MMM yyyy")
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-5">
+
+        <div class="card">
+
+            <div class="card-header">
+                Face Recognition
+            </div>
+
+            <div class="card-body">
+
+                @if (!string.IsNullOrWhiteSpace(Model.FaceData))
+                {
+                    <div class="alert alert-success">
+
+                        <strong>
+                            ✓ Face Registered
+                        </strong>
+
+                        <div class="mt-1">
+                            Local recognition template is available.
+                        </div>
+
+                    </div>
+
+                    <a asp-action="RegisterFace"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-outline-primary w-100">
+
+                        Re-register Face
+
+                    </a>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+
+                        Face registration is not complete.
+
+                    </div>
+
+                    <a asp-action="RegisterFace"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-primary w-100">
+
+                        Register Face
+
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

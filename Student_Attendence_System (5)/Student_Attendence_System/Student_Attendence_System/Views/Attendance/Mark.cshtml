@@ -1,0 +1,1366 @@
+﻿@{
+    ViewData["Title"] = "Mark Attendance";
+}
+
+<div class="attendance-page">
+
+    <!-- PAGE HEADER -->
+    <div class="attendance-page-header">
+
+        <div>
+            <h1>Mark Attendance</h1>
+
+            <p>
+                Scan the face of a student to mark attendance.
+            </p>
+        </div>
+
+        <a asp-controller="Attendance"
+           asp-action="Index"
+           class="btn btn-outline-secondary btn-sm">
+            ← Back to Attendance
+        </a>
+
+    </div>
+
+
+    <!-- PRIVACY -->
+    <div class="privacy-banner">
+
+        <strong>Privacy:</strong>
+
+        Face processing is performed through your local
+        recognition engine. The original camera image is
+        not permanently stored.
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <!-- =========================================
+             CAMERA
+             ========================================= -->
+
+        <div class="col-lg-8">
+
+            <div class="attendance-card">
+
+                <div class="attendance-card-header">
+
+                    <div>
+
+                        <strong>Face Scanner</strong>
+
+                        <div class="scanner-subtitle">
+                            Position one student inside the guide.
+                        </div>
+
+                    </div>
+
+                    <span id="cameraStatus"
+                          class="badge bg-secondary camera-status">
+                        Camera Off
+                    </span>
+
+                </div>
+
+
+                <div class="attendance-card-body">
+
+                    <!-- CAMERA SELECT -->
+
+                    <label for="cameraSelect"
+                           class="camera-label">
+                        Camera
+                    </label>
+
+                    <select id="cameraSelect"
+                            class="form-select camera-select">
+
+                        <option value="">
+                            Detecting cameras...
+                        </option>
+
+                    </select>
+
+
+                    <!-- CAMERA -->
+
+                    <div class="attendance-camera">
+
+                        <video id="camera"
+                               autoplay
+                               muted
+                               playsinline>
+                        </video>
+
+
+                        <div id="cameraPlaceholder"
+                             class="camera-placeholder">
+
+                            <div class="camera-placeholder-icon">
+                                ◉
+                            </div>
+
+                            <strong>
+                                Camera Ready
+                            </strong>
+
+                            <span>
+                                Click Start Camera
+                            </span>
+
+                        </div>
+
+
+                        <!-- FACE GUIDE -->
+
+                        <div class="face-overlay">
+
+                            <div class="face-guide">
+
+                                <div class="scan-line"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <canvas id="canvas"
+                            style="display:none;">
+                    </canvas>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="camera-actions">
+
+                        <button type="button"
+                                id="startCamera"
+                                class="btn btn-primary">
+                            Start Camera
+                        </button>
+
+                        <button type="button"
+                                id="stopCamera"
+                                class="btn btn-outline-secondary"
+                                disabled>
+                            Stop Camera
+                        </button>
+
+                        <button type="button"
+                                id="scanFace"
+                                class="btn btn-success"
+                                disabled>
+                            Scan Face
+                        </button>
+
+                    </div>
+
+
+                    <!-- MESSAGE -->
+
+                    <div id="cameraMessage"
+                         class="camera-message">
+
+                        <div class="alert alert-info mb-0">
+                            Preparing camera...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             RIGHT SIDE
+             ========================================= -->
+
+        <div class="col-lg-4">
+
+            <!-- ATTENDANCE RESULT -->
+
+            <div class="attendance-card">
+
+                <div class="attendance-card-header">
+
+                    <strong>
+                        Attendance Result
+                    </strong>
+
+                </div>
+
+
+                <div class="attendance-card-body">
+
+                    <div id="resultBox"
+                         class="attendance-result">
+
+                        <div id="resultIcon"
+                             class="attendance-result-icon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <strong id="resultTitle">
+                                Ready to scan
+                            </strong>
+
+                            <p id="resultMessage">
+                                Start the camera and position
+                                one student in front of it.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RECOGNIZED STUDENT -->
+
+                    <div id="studentInfo"
+                         class="recognized-student"
+                         style="display:none;">
+
+                        <div class="recognized-student-header">
+                            Recognized Student
+                        </div>
+
+
+                        <div class="recognized-row">
+
+                            <span>
+                                Student Name
+                            </span>
+
+                            <strong id="studentName">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="recognized-row">
+
+                            <span>
+                                Enrollment Number
+                            </span>
+
+                            <strong id="studentEnrollment">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="recognized-row">
+
+                            <span>
+                                Class
+                            </span>
+
+                            <strong id="studentClass">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="recognized-row">
+
+                            <span>
+                                Confidence
+                            </span>
+
+                            <strong id="confidence">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="recognized-row">
+
+                            <span>
+                                Liveness
+                            </span>
+
+                            <strong id="liveness">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RECOGNITION DETAILS -->
+
+                    <div class="recognition-details">
+
+                        <div class="recognition-row">
+
+                            <span>
+                                Recognition
+                            </span>
+
+                            <strong>
+                                Local
+                            </strong>
+
+                        </div>
+
+
+                        <div class="recognition-row">
+
+                            <span>
+                                Liveness
+                            </span>
+
+                            <strong>
+                                Enabled
+                            </strong>
+
+                        </div>
+
+
+                        <div class="recognition-row">
+
+                            <span>
+                                Method
+                            </span>
+
+                            <strong>
+                                Face
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCANNING TIPS -->
+
+            <div class="attendance-card mt-3">
+
+                <div class="attendance-card-header">
+
+                    <strong>
+                        Scanning Tips
+                    </strong>
+
+                </div>
+
+
+                <div class="attendance-card-body">
+
+                    <ul class="attendance-tips">
+
+                        <li>
+                            Use good lighting.
+                        </li>
+
+                        <li>
+                            Look directly at the camera.
+                        </li>
+
+                        <li>
+                            Keep only one student in front
+                            of the camera.
+                        </li>
+
+                        <li>
+                            Keep your complete face visible.
+                        </li>
+
+                        <li>
+                            Remove anything covering the face.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOCAL RECOGNITION -->
+
+            <div class="attendance-card mt-3">
+
+                <div class="attendance-card-body">
+
+                    <div class="local-recognition">
+
+                        <div class="local-recognition-icon">
+                            🔒
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Local Recognition
+                            </strong>
+
+                            <small>
+                                Face processing stays on this device.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ANTI FORGERY TOKEN -->
+
+<form id="antiForgeryForm"
+      style="display:none;">
+
+    @Html.AntiForgeryToken()
+
+</form>
+
+
+@section Scripts {
+
+    <script>
+
+        let cameraStream = null;
+
+
+        const video =
+            document.getElementById("camera");
+
+        const canvas =
+            document.getElementById("canvas");
+
+        const cameraSelect =
+            document.getElementById("cameraSelect");
+
+        const startButton =
+            document.getElementById("startCamera");
+
+        const stopButton =
+            document.getElementById("stopCamera");
+
+        const scanButton =
+            document.getElementById("scanFace");
+
+        const cameraStatus =
+            document.getElementById("cameraStatus");
+
+        const cameraPlaceholder =
+            document.getElementById("cameraPlaceholder");
+
+        const cameraMessage =
+            document.getElementById("cameraMessage");
+
+
+        const resultBox =
+            document.getElementById("resultBox");
+
+        const resultIcon =
+            document.getElementById("resultIcon");
+
+        const resultTitle =
+            document.getElementById("resultTitle");
+
+        const resultMessage =
+            document.getElementById("resultMessage");
+
+
+        const studentInfo =
+            document.getElementById("studentInfo");
+
+        const studentName =
+            document.getElementById("studentName");
+
+        const studentEnrollment =
+            document.getElementById("studentEnrollment");
+
+        const studentClass =
+            document.getElementById("studentClass");
+
+        const confidence =
+            document.getElementById("confidence");
+
+        const liveness =
+            document.getElementById("liveness");
+
+
+        const antiForgeryToken =
+            document.querySelector(
+                '#antiForgeryForm input[name="__RequestVerificationToken"]'
+            );
+
+
+        /* =========================================
+           CAMERA MESSAGE
+           ========================================= */
+
+        function showCameraMessage(message, type = "info") {
+
+            cameraMessage.innerHTML = `
+                <div class="alert alert-${type} mb-0">
+                    ${message}
+                </div>
+            `;
+
+        }
+
+
+        /* =========================================
+           RESULT
+           ========================================= */
+
+        function showResult(
+            title,
+            message,
+            type = "ready"
+        ) {
+
+            resultBox.className =
+                "attendance-result";
+
+            if (type === "success") {
+
+                resultBox.classList.add("success");
+
+                resultIcon.textContent = "✓";
+
+            }
+            else if (type === "warning") {
+
+                resultBox.classList.add("warning");
+
+                resultIcon.textContent = "!";
+
+            }
+            else if (type === "error") {
+
+                resultBox.classList.add("error");
+
+                resultIcon.textContent = "×";
+
+            }
+            else {
+
+                resultIcon.textContent = "◉";
+
+            }
+
+            resultTitle.textContent = title;
+
+            resultMessage.textContent = message;
+
+        }
+
+
+        /* =========================================
+           LOAD CAMERAS
+           ========================================= */
+
+        async function loadCameras() {
+
+            if (!navigator.mediaDevices ||
+                !navigator.mediaDevices.getUserMedia) {
+
+                showCameraMessage(
+                    "Your browser does not support camera access.",
+                    "danger"
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const temporaryStream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: false
+                    });
+
+
+                temporaryStream
+                    .getTracks()
+                    .forEach(track => track.stop());
+
+
+                const devices =
+                    await navigator.mediaDevices.enumerateDevices();
+
+
+                const cameras =
+                    devices.filter(
+                        device =>
+                            device.kind === "videoinput"
+                    );
+
+
+                cameraSelect.innerHTML = "";
+
+
+                if (cameras.length === 0) {
+
+                    cameraSelect.innerHTML = `
+                        <option value="">
+                            No camera found
+                        </option>
+                    `;
+
+                    showCameraMessage(
+                        "No camera was detected.",
+                        "danger"
+                    );
+
+                    return;
+                }
+
+
+                cameras.forEach(
+                    (camera, index) => {
+
+                        const option =
+                            document.createElement("option");
+
+                        option.value =
+                            camera.deviceId;
+
+                        option.textContent =
+                            camera.label ||
+                            `Camera ${index + 1}`;
+
+                        cameraSelect.appendChild(option);
+
+                    }
+                );
+
+
+                /*
+                 * Prefer laptop / integrated webcam.
+                 */
+
+                const preferredCamera =
+                    cameras.find(camera => {
+
+                        const name =
+                            (camera.label || "")
+                                .toLowerCase();
+
+                        return (
+                            name.includes("integrated") ||
+                            name.includes("built-in") ||
+                            name.includes("internal") ||
+                            name.includes("laptop") ||
+                            name.includes("facetime")
+                        );
+
+                    });
+
+
+                cameraSelect.value =
+                    preferredCamera
+                        ? preferredCamera.deviceId
+                        : cameras[cameras.length - 1].deviceId;
+
+
+                showCameraMessage(
+                    `${cameras.length} camera available. Click Start Camera.`,
+                    "info"
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Camera detection error:",
+                    error
+                );
+
+
+                if (error.name === "NotAllowedError") {
+
+                    showCameraMessage(
+                        "Camera permission was denied. Allow camera access for localhost.",
+                        "danger"
+                    );
+
+                }
+                else {
+
+                    showCameraMessage(
+                        "Unable to access your camera.",
+                        "danger"
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /* =========================================
+           START CAMERA
+           ========================================= */
+
+        async function startCamera() {
+
+            try {
+
+                stopCamera(false);
+
+
+                const selectedCamera =
+                    cameraSelect.value;
+
+
+                const constraints = {
+
+                    video: selectedCamera
+                        ? {
+                            deviceId: {
+                                exact: selectedCamera
+                            },
+                            width: {
+                                ideal: 1280
+                            },
+                            height: {
+                                ideal: 720
+                            }
+                        }
+                        : {
+                            facingMode: "user",
+                            width: {
+                                ideal: 1280
+                            },
+                            height: {
+                                ideal: 720
+                            }
+                        },
+
+                    audio: false
+
+                };
+
+
+                cameraStream =
+                    await navigator.mediaDevices.getUserMedia(
+                        constraints
+                    );
+
+
+                video.srcObject =
+                    cameraStream;
+
+
+                await video.play();
+
+
+                cameraPlaceholder.style.display =
+                    "none";
+
+
+                cameraStatus.textContent =
+                    "Camera On";
+
+
+                cameraStatus.className =
+                    "badge bg-success camera-status";
+
+
+                startButton.disabled =
+                    true;
+
+
+                stopButton.disabled =
+                    false;
+
+
+                scanButton.disabled =
+                    false;
+
+
+                showCameraMessage(
+                    "Camera started. Position one student inside the guide.",
+                    "success"
+                );
+
+
+                showResult(
+                    "Ready to scan",
+                    "Position one student inside the guide and click Scan Face.",
+                    "ready"
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Camera start error:",
+                    error
+                );
+
+
+                cameraStatus.textContent =
+                    "Camera Error";
+
+
+                cameraStatus.className =
+                    "badge bg-danger camera-status";
+
+
+                startButton.disabled =
+                    false;
+
+
+                stopButton.disabled =
+                    true;
+
+
+                scanButton.disabled =
+                    true;
+
+
+                if (error.name === "NotAllowedError") {
+
+                    showCameraMessage(
+                        "Camera permission was denied. Allow camera access for localhost.",
+                        "danger"
+                    );
+
+                }
+                else if (error.name === "NotFoundError") {
+
+                    showCameraMessage(
+                        "No camera was found.",
+                        "danger"
+                    );
+
+                }
+                else if (error.name === "NotReadableError") {
+
+                    showCameraMessage(
+                        "The camera is being used by another application.",
+                        "danger"
+                    );
+
+                }
+                else {
+
+                    showCameraMessage(
+                        "Unable to start camera: " +
+                        error.message,
+                        "danger"
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /* =========================================
+           STOP CAMERA
+           ========================================= */
+
+        function stopCamera(showMessage = true) {
+
+            if (cameraStream) {
+
+                cameraStream
+                    .getTracks()
+                    .forEach(track => track.stop());
+
+                cameraStream = null;
+            }
+
+
+            video.srcObject = null;
+
+
+            cameraPlaceholder.style.display =
+                "flex";
+
+
+            cameraStatus.textContent =
+                "Camera Off";
+
+
+            cameraStatus.className =
+                "badge bg-secondary camera-status";
+
+
+            startButton.disabled =
+                false;
+
+
+            stopButton.disabled =
+                true;
+
+
+            scanButton.disabled =
+                true;
+
+
+            if (showMessage) {
+
+                showCameraMessage(
+                    "Camera stopped.",
+                    "secondary"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           CAPTURE FRAME
+           ========================================= */
+
+        function captureFrame() {
+
+            if (!cameraStream ||
+                !video.videoWidth ||
+                !video.videoHeight) {
+
+                return null;
+            }
+
+
+            canvas.width =
+                video.videoWidth;
+
+            canvas.height =
+                video.videoHeight;
+
+
+            const context =
+                canvas.getContext("2d");
+
+
+            context.drawImage(
+                video,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            return canvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+        }
+
+
+        /* =========================================
+           SCAN FACE
+           ========================================= */
+
+        async function scanFace() {
+
+            if (!cameraStream) {
+
+                showCameraMessage(
+                    "Start the camera first.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            const imageData =
+                captureFrame();
+
+
+            if (!imageData) {
+
+                showCameraMessage(
+                    "Unable to capture camera image.",
+                    "danger"
+                );
+
+                return;
+            }
+
+
+            scanButton.disabled = true;
+
+
+            showResult(
+                "Scanning...",
+                "Checking face and liveness. Please stay still.",
+                "warning"
+            );
+
+
+            showCameraMessage(
+                "Recognition in progress...",
+                "info"
+            );
+
+
+            try {
+
+                const imageResponse =
+                    await fetch(imageData);
+
+
+                const imageBlob =
+                    await imageResponse.blob();
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "faceImage",
+                    imageBlob,
+                    "attendance-face.jpg"
+                );
+
+
+                if (antiForgeryToken) {
+
+                    formData.append(
+                        "__RequestVerificationToken",
+                        antiForgeryToken.value
+                    );
+
+                }
+
+
+                const response =
+                    await fetch(
+                        '@Url.Action("Recognize", "Attendance")',
+                        {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
+                            }
+                        }
+                    );
+
+
+                const responseText =
+                    await response.text();
+
+
+                if (!responseText) {
+
+                    throw new Error(
+                        "The server returned an empty response. HTTP " +
+                        response.status
+                    );
+
+                }
+
+
+                let data;
+
+
+                try {
+
+                    data =
+                        JSON.parse(responseText);
+
+                }
+                catch {
+
+                    throw new Error(
+                        "Invalid server response: " +
+                        responseText.substring(0, 300)
+                    );
+
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Attendance request failed."
+                    );
+
+                }
+
+
+                /*
+                 * ALREADY MARKED
+                 */
+
+                if (data.alreadyMarked === true) {
+
+                    showResult(
+                        "Already Marked",
+                        data.message ||
+                        "Attendance has already been marked for today.",
+                        "warning"
+                    );
+
+
+                    showStudent(data);
+
+
+                    showCameraMessage(
+                        "This student's attendance is already marked today.",
+                        "warning"
+                    );
+
+
+                    return;
+                }
+
+
+                /*
+                 * SUCCESS
+                 */
+
+                if (
+                    data.matched === true ||
+                    (
+                        data.success === true &&
+                        data.studentId
+                    )
+                ) {
+
+                    showResult(
+                        "Attendance Marked",
+                        data.message ||
+                        "Student attendance has been recorded successfully.",
+                        "success"
+                    );
+
+
+                    showStudent(data);
+
+
+                    showCameraMessage(
+                        "Attendance recorded successfully.",
+                        "success"
+                    );
+
+
+                    return;
+                }
+
+
+                /*
+                 * NOT RECOGNIZED
+                 */
+
+                showResult(
+                    "Face Not Recognized",
+                    data.message ||
+                    "No registered student matched this face.",
+                    "error"
+                );
+
+
+                studentInfo.style.display =
+                    "none";
+
+
+                showCameraMessage(
+                    data.message ||
+                    "Face not recognized. Please try again.",
+                    "warning"
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Recognition error:",
+                    error
+                );
+
+
+                showResult(
+                    "Recognition Error",
+                    error.message ||
+                    "Unable to process attendance.",
+                    "error"
+                );
+
+
+                studentInfo.style.display =
+                    "none";
+
+
+                showCameraMessage(
+                    error.message ||
+                    "Unable to connect to the recognition service.",
+                    "danger"
+                );
+
+            }
+            finally {
+
+                scanButton.disabled =
+                    false;
+
+            }
+
+        }
+
+
+        /* =========================================
+           SHOW STUDENT
+           ========================================= */
+
+        function showStudent(data) {
+
+            studentInfo.style.display =
+                "block";
+
+
+            studentName.textContent =
+                data.studentName ||
+                data.name ||
+                "Recognized Student";
+
+
+            studentEnrollment.textContent =
+                data.enrollmentNo ||
+                data.enrollment ||
+                "—";
+
+
+            studentClass.textContent =
+                data.className ||
+                data.class ||
+                "—";
+
+
+            if (
+                data.confidence !== undefined &&
+                data.confidence !== null
+            ) {
+
+                let score =
+                    Number(data.confidence);
+
+
+                if (score <= 1) {
+
+                    score *= 100;
+
+                }
+
+
+                confidence.textContent =
+                    score.toFixed(1) + "%";
+
+            }
+            else {
+
+                confidence.textContent =
+                    "Verified";
+
+            }
+
+
+            liveness.textContent =
+                data.live === false
+                    ? "Failed"
+                    : "Passed";
+
+        }
+
+
+        /* =========================================
+           EVENTS
+           ========================================= */
+
+        startButton.addEventListener(
+            "click",
+            startCamera
+        );
+
+
+        stopButton.addEventListener(
+            "click",
+            function () {
+
+                stopCamera(true);
+
+            }
+        );
+
+
+        scanButton.addEventListener(
+            "click",
+            scanFace
+        );
+
+
+        cameraSelect.addEventListener(
+            "change",
+            function () {
+
+                if (cameraStream) {
+
+                    startCamera();
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                loadCameras();
+
+            }
+        );
+
+
+        window.addEventListener(
+            "beforeunload",
+            function () {
+
+                stopCamera(false);
+
+            }
+        );
+
+    </script>
+
+}

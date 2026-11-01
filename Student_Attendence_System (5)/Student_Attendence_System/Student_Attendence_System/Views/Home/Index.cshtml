@@ -1,0 +1,225 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-header">
+
+    <div>
+        <h1>Dashboard</h1>
+
+        <p>
+            Overview of your student attendance system.
+        </p>
+    </div>
+
+    <div class="page-actions">
+
+        <a asp-controller="Student"
+           asp-action="Create"
+           class="btn btn-primary">
+            + Add Student
+        </a>
+
+        <a asp-controller="Attendance"
+           asp-action="Mark"
+           class="btn btn-outline-primary">
+            ◉ Mark Attendance
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4 mb-4">
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card">
+
+            <span>Total Students</span>
+
+            <strong>
+                @ViewBag.TotalStudents
+            </strong>
+
+            <small class="text-muted">
+                Registered students
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card">
+
+            <span>Present Today</span>
+
+            <strong>
+                @ViewBag.TodayPresent
+            </strong>
+
+            <small class="text-muted">
+                Today's attendance
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card">
+
+            <span>Total Records</span>
+
+            <strong>
+                @ViewBag.TotalAttendance
+            </strong>
+
+            <small class="text-muted">
+                Attendance records
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card">
+
+            <span>Recognition</span>
+
+            <strong>Local</strong>
+
+            <small class="text-muted">
+                On-device processing
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <strong>
+                    Recent Attendance
+                </strong>
+
+                <a asp-controller="Attendance"
+                   asp-action="Index">
+                    View all
+                </a>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        ✓
+                    </div>
+
+                    <h3>
+                        Attendance Dashboard
+                    </h3>
+
+                    <p>
+                        Use the Attendance section to view
+                        detailed attendance records.
+                    </p>
+
+                    <a asp-controller="Attendance"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Attendance
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4">
+
+        <div class="card">
+
+            <div class="card-header">
+                Quick Actions
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-grid gap-2">
+
+                    <a asp-controller="Student"
+                       asp-action="Create"
+                       class="btn btn-primary">
+                        + Add Student
+                    </a>
+
+                    <a asp-controller="Student"
+                       asp-action="Index"
+                       class="btn btn-outline-primary">
+                        Manage Students
+                    </a>
+
+                    <a asp-controller="Attendance"
+                       asp-action="Mark"
+                       class="btn btn-outline-primary">
+                        Start Face Attendance
+                    </a>
+
+                    <a asp-controller="Attendance"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        View Attendance
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card mt-4">
+
+            <div class="card-body">
+
+                <strong>
+                    🔒 Local Recognition
+                </strong>
+
+                <p class="text-muted mb-0 mt-2">
+                    Face recognition is processed through
+                    your local recognition engine.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
